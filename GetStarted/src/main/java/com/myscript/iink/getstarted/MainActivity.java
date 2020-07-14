@@ -2,9 +2,15 @@
 
 package com.myscript.iink.getstarted;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,6 +37,8 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener
 {
   private static final String TAG = "MainActivity";
+
+  private static final int GET_MANAGE_OVERLAY_PERMISSION = 1000;
 
   private Engine engine;
   private ContentPackage contentPackage;
@@ -185,6 +193,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
           editor.convert(null, supportedStates[0]);
         return true;
       }
+      case R.id.menu_calculate:
+      {
+        if (!canDrawOverlays(this)) {
+          requestDrawOverlayPermission(this);
+        } else {
+          startService(new Intent(this, MathService.class));
+        }
+      }
       default:
       {
         return super.onOptionsItemSelected(item);
@@ -218,6 +234,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
       default:
         Log.e(TAG, "Failed to handle click event");
         break;
+    }
+  }
+  private boolean canDrawOverlays(Context context) {
+    return Build.VERSION.SDK_INT < Build.VERSION_CODES.O || Settings.canDrawOverlays(context);
+  }
+
+  private void requestDrawOverlayPermission(Activity activity) {
+    if (!canDrawOverlays(activity)) {
+      Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName()));
+      activity.startActivityForResult(intent, GET_MANAGE_OVERLAY_PERMISSION);
     }
   }
 
