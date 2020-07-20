@@ -46,7 +46,7 @@ public class MathService extends Service {
     private boolean mSelectionMode;
 
     private ImageView mDelete, mScale;
-    private Button mClear;
+    private Button mClear, mRecognize;
     private AppCompatTextView mFormulaText, mResultText;
     float mLastTouchX, mLastTouchY;
     private int mMinWidth, mMinHeight;
@@ -206,6 +206,7 @@ public class MathService extends Service {
     private void findView() {
         mDelete = (ImageView) mBaseLayout.findViewById(R.id.btn_delete);
         mClear = (Button) mBaseLayout.findViewById(R.id.btn_clear);
+        mRecognize = (Button) mBaseLayout.findViewById(R.id.btn_recognize);
         mScale = (ImageView) mBaseLayout.findViewById(R.id.btn_scale);
         mFormulaText = (AppCompatTextView) mBaseLayout.findViewById(R.id.math_formula);
         mResultText = (AppCompatTextView) mBaseLayout.findViewById(R.id.math_result);
@@ -215,6 +216,7 @@ public class MathService extends Service {
     private void setOnClickListener() {
         mDelete.setOnClickListener(mBtnListener);
         mClear.setOnClickListener(mBtnListener);
+        mRecognize.setOnClickListener(mBtnListener);
         mScale.setOnClickListener(mBtnListener);
         mScale.setOnTouchListener(mOnTouchListener);
     }
@@ -231,7 +233,7 @@ public class MathService extends Service {
 
         mEditorView.setEngine(mEngine);
         final Editor editor = mEditorView.getEditor();
-        editor.setPenStyle("color: #ff000000;");
+        editor.setPenStyle("color: #000000ff;");
 
         mEditorView.setInputControllerListener(new IInputControllerListener() {
             @Override
@@ -285,6 +287,7 @@ public class MathService extends Service {
                     mEditorView.getEditor().clear();
                     break;
                 case R.id.btn_recognize:
+                    Log.d(TAG, "onClick: Recognize");
                     recognize();
                     break;
             }
