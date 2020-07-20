@@ -225,6 +225,10 @@ public class MathService extends Service {
         mEngine = Engine.create(MyCertificate.getBytes());
         // configure recognition
         Configuration conf = mEngine.getConfiguration();
+        conf.setNumber("math.margin.bottom", 0);
+        conf.setNumber("math.margin.left", 0);
+        conf.setNumber("math.margin.right", 0);
+        conf.setNumber("math.margin.top", 0);
         String confDir = "zip://" + getPackageCodePath() + "!/assets/conf";
         conf.setStringArray("configuration-manager.search-path", new String[]{confDir});
         String tempDir = getFilesDir().getPath() + File.separator + "tmp";
